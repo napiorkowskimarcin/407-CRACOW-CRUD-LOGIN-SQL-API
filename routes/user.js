@@ -8,7 +8,8 @@ const maxAge = require("../config/maxAge");
 //CREATE TOKEN FOR LOG-IN
 //CREATE TOKEN
 const createToken = (user) => {
-  const payload = { name: user.us_name };
+  const payload = { name: user };
+  console.log(payload.name);
   return jwt.sign(payload, "secret to be hidden", {
     expiresIn: maxAge,
   });
@@ -64,7 +65,7 @@ router.post("/signin", async (req, res) => {
 
   try {
     if (await bcrypt.compare(password, user.us_password)) {
-      const accessToken = await createToken(user);
+      const accessToken = await createToken(user.us_name);
       user.us_password = "top secret";
       res.send({ user, accessToken });
     } else {

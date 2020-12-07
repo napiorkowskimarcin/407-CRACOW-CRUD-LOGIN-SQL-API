@@ -8,6 +8,9 @@ const bodyParser = require("body-parser");
 const pool = require("./config/config");
 const jwt = require("jsonwebtoken");
 
+//LOAD JWT MIDDLEWARE
+const ensureAuthentication = require("./middleware/auth");
+
 //set a port
 const PORT = process.env.PORT || 3000;
 
@@ -22,6 +25,7 @@ app.use(bodyParser.json());
 app.use(morgan("dev"));
 
 //routes
+app.use("/todos", ensureAuthentication, require("./routes/todos"));
 app.use("/user", require("./routes/user"));
 app.use("/", require("./routes/index"));
 
