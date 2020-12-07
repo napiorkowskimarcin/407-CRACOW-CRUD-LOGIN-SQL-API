@@ -43,4 +43,31 @@ router.post("/create", async (req, res) => {
   }
 });
 
+//DELETE TASK
+router.post("/delete", async (req, res) => {
+  const userName = req.name;
+  const taskToRemove = req.body.taskName;
+
+  try {
+    const taskToRemoveByTaskName = await pool.query(
+      "SELECT * FROM todo_tasklist WHERE todo_name = $1",
+      [taskToRemove]
+    );
+    console.log(taskToRemoveByTaskName.rows.length);
+    if (!taskToRemoveByTaskName.rows.length) {
+      res.send("task not found");
+    }
+    if (taskToRemoveByTaskName.rows[0].todo_user === userName) {
+      await pool.query("DELETE FROM todo_tasklist WHERE todo_name = $1", [
+        taskToRemove,
+      ]);
+      res.status(200).send(`Succesfully removed task:${taskToRemove}`);
+    } else {
+      res.send("You are not allowed to remove this task!");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 module.exports = router;
