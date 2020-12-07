@@ -1,17 +1,28 @@
 {
   "name": "407-cracow-crud-login-sql-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "homwork 7.12.2020",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
-  "author": "",
+  "author": "mn",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.0.0",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
     "pg": "^8.5.1"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/napiorkowskimarcin/407-CRACOW-CRUD-LOGIN-SQL-API.git"
+  },
+  "bugs": {
+    "url": "https://github.com/napiorkowskimarcin/407-CRACOW-CRUD-LOGIN-SQL-API/issues"
+  },
+  "homepage": "https://github.com/napiorkowskimarcin/407-CRACOW-CRUD-LOGIN-SQL-API#readme"
 }
