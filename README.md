@@ -16,4 +16,5 @@ Created with:
 
 Clone repository from GitHub, run it with console: 'node server' and go to swagger docs:
 http://localhost:3000/api-docs/
+IMPORTANT! adjust your postgreSQL in ./config/config.
 follow included instructions and requirements.
