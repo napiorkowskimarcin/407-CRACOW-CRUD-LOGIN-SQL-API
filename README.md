@@ -14,4 +14,6 @@ Created with:
 
 ## Instructions
 
-Clone repository from GitHub and go to swagger docs:
+Clone repository from GitHub, run it with console: 'node server' and go to swagger docs:
+http://localhost:3000/api-docs/
+follow included instructions and requirements.
