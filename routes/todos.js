@@ -3,6 +3,24 @@ const router = express.Router();
 const pool = require("../config/config");
 
 //READ TASKS
+/**
+ * @swagger
+/api/todos/:
+*    get:
+*      summary: "Find tasks"
+*      description: "Returns a list of tasks created by your user"
+*      produces:
+*      - "application/xml"
+*      - "application/json"
+*      parameters:
+*      - name: "Authorization"
+*        in: "header"
+*        description: "bearer with accessToken to place"
+*        required: true
+*      responses:
+*        "200":
+*          description: "successful operation"
+*/
 router.get("/", async (req, res) => {
   const userName = req.name;
   try {
@@ -21,6 +39,29 @@ router.get("/", async (req, res) => {
 });
 
 //READ TASK WITH AN ID
+/**
+ * @swagger
+/api/todos/{Id}:
+*    get:
+*      summary: "Find task by ID"
+*      description: "Returns a single task"
+*      produces:
+*      - "application/xml"
+*      - "application/json"
+*      parameters:
+*      - name: "Id"
+*        in: "path"
+*        description: "ID of task to return"
+*        required: true
+*        type: "integer"
+*      - name: "Authorization"
+*        in: "header"
+*        description: "bearer with accessToken to place"
+*        required: true
+*      responses:
+*        "200":
+*          description: "successful operation"
+*/
 router.get("/:id", async (req, res) => {
   const taskId = req.params.id;
 
@@ -48,6 +89,27 @@ router.get("/:id", async (req, res) => {
 });
 
 //CREATE TASK
+/**
+ * @swagger
+/api/todos/create:
+*    post:
+*      summary: "Create a task"
+*      description: "Create a task with name of task and description od it. You need to include: 'taskName' and 'taskDescription"
+*      produces:
+*      - "application/xml"
+*      - "application/json"
+*      parameters:
+*      - name: "body"
+*        in: "body"
+*        required: true
+*      - name: "Authorization"
+*        in: "header"
+*        description: "bearer with accessToken to place"
+*        required: true
+*      responses:
+*        "200":
+*          description: "successful operation"
+*/
 router.post("/create", async (req, res) => {
   const userName = req.name;
   const { taskName, taskDescription } = req.body;
@@ -80,6 +142,27 @@ router.post("/create", async (req, res) => {
 });
 
 //UPDATE TASK
+/**
+ * @swagger
+/api/todos/update:
+*    post:
+*      summary: "Update a task"
+*      description: "Update a task accordingly to the pushed id in body"
+*      produces:
+*      - "application/xml"
+*      - "application/json"
+*      parameters:
+*      - name: "body"
+*        in: "body"
+*        required: true
+*      - name: "Authorization"
+*        in: "header"
+*        description: "bearer with accessToken to place"
+*        required: true
+*      responses:
+*        "200":
+*          description: "successful operation"
+*/
 router.post("/update", async (req, res) => {
   const userName = req.name;
   const { taskName, taskDescription, taskId } = req.body;
@@ -104,21 +187,44 @@ router.post("/update", async (req, res) => {
 });
 
 //DELETE TASK
-router.post("/delete", async (req, res) => {
+/**
+ * @swagger
+/api/todos/delete/{Id}:
+*    post:
+*      summary: "Remove a task"
+*      description: "Remove a task accordingly to the pushed id in body"
+*      produces:
+*      - "application/xml"
+*      - "application/json"
+*      parameters:
+*      - name: "Id"
+*        in: "path"
+*        description: "ID of task to delete"
+*        required: true
+*        type: "integer"
+*      - name: "Authorization"
+*        in: "header"
+*        description: "bearer with accessToken to place"
+*        required: true
+*      responses:
+*        "200":
+*          description: "successful operation"
+*/
+router.post("/delete/:id", async (req, res) => {
   const userName = req.name;
-  const taskToRemove = req.body.taskName;
+  const taskToRemove = req.params.id;
 
   try {
-    const taskToRemoveByTaskName = await pool.query(
-      "SELECT * FROM todo_tasklist WHERE todo_name = $1",
+    const taskToRemoveByTaskId = await pool.query(
+      "SELECT * FROM todo_tasklist WHERE todo_id = $1",
       [taskToRemove]
     );
 
-    if (!taskToRemoveByTaskName.rows.length) {
+    if (!taskToRemoveByTaskId.rows.length) {
       res.send("task not found");
     }
-    if (taskToRemoveByTaskName.rows[0].todo_user === userName) {
-      await pool.query("DELETE FROM todo_tasklist WHERE todo_name = $1", [
+    if (taskToRemoveByTaskId.rows[0].todo_user === userName) {
+      await pool.query("DELETE FROM todo_tasklist WHERE todo_id = $1", [
         taskToRemove,
       ]);
       res.status(200).send(`Succesfully removed task:${taskToRemove}`);
@@ -131,6 +237,16 @@ router.post("/delete", async (req, res) => {
 });
 
 //CLEAR ALL DATA
+/**
+ * @swagger
+/api/todos/truncate:
+*    post:
+*      summary: "Clear storage"
+*      description: "Removes all of the tasks from this list"
+*      responses:
+*        "200":
+*          description: "successful operation"
+*/
 router.post("/truncate", async (req, res) => {
   await pool.query("TRUNCATE todo_tasklist");
   res.send("todo list cleared");

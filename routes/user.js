@@ -6,7 +6,6 @@ const pool = require("../config/config");
 const maxAge = require("../config/maxAge");
 
 //CREATE TOKEN FOR LOG-IN
-//CREATE TOKEN
 const createToken = (user) => {
   const payload = { name: user };
   console.log(payload.name);
@@ -15,18 +14,22 @@ const createToken = (user) => {
   });
 };
 
-//SEE ALL USERS
-router.get("/", async (req, res) => {
-  let userList = await pool.query("SELECT * FROM todo_user");
-  console.log(userList.rows);
-  userList = userList.rows;
-  userList.map((element) => (element.password = "it is a secret!"));
-  const message = `please sign in. There is a list of valid users:
-  ${userList}`;
-  res.status(200).send(message);
-});
-
 //CREATE USER
+/**
+ * @swagger
+/api/user/signup:
+*    post:
+*      summary: "Create you own user"
+*      description: "You have a chance to create your own user. "
+*      parameters:
+*      - name: "body"
+*        description: "body needs to include 'name' and 'password'"
+*        in: "body"
+*        required: true
+*      responses:
+*        "201":
+*          description: "successful operation"
+*/
 router.post("/signup", async (req, res) => {
   const name = req.body.name;
   const checkIfExists = await pool.query(
@@ -52,6 +55,21 @@ router.post("/signup", async (req, res) => {
 });
 
 //LOG IN WITH USER DATA
+/**
+ * @swagger
+/api/user/signin:
+*    post:
+*      summary: "Log with your own user"
+*      description: "After being loged in - copy `accessToken`! use it with Authorization, as: `bearer  accessToken`"
+*      parameters:
+*      - name: "body"
+*        description: "body needs to include 'name' and 'password'"
+*        in: "body"
+*        required: true
+*      responses:
+*        "200":
+*          description: "successful operation"
+*/
 router.post("/signin", async (req, res) => {
   const { password, name } = req.body;
   let user = await pool.query(
@@ -62,7 +80,6 @@ router.post("/signin", async (req, res) => {
   if (!user) {
     res.status(200).send("no user with that name- please create an accout");
   }
-
   try {
     if (await bcrypt.compare(password, user.us_password)) {
       const accessToken = await createToken(user.us_name);

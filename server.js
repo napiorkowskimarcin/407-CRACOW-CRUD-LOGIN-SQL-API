@@ -8,6 +8,23 @@ const bodyParser = require("body-parser");
 const pool = require("./config/config");
 const jwt = require("jsonwebtoken");
 
+//LOAD SWAGGER
+const swaggerJsDoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
+
+//SWAGGER SETUP
+const swaggerOptions = {
+  swaggerDefinition: {
+    info: {
+      title: "MN - HOMEWORK FOR CRACOW COURSE",
+      description:
+        "Finished homework - PART1 of FULLSTACK task. Check my github: https://github.com/napiorkowskimarcin",
+    },
+  },
+  apis: ["./routes/index.js", "./routes/user.js", "./routes/todos.js"],
+};
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+
 //LOAD JWT MIDDLEWARE
 const ensureAuthentication = require("./middleware/auth");
 
@@ -25,9 +42,11 @@ app.use(bodyParser.json());
 app.use(morgan("dev"));
 
 //routes
-app.use("/todos", ensureAuthentication, require("./routes/todos"));
-app.use("/user", require("./routes/user"));
-app.use("/", require("./routes/index"));
+app.use("/api/todos", ensureAuthentication, require("./routes/todos"));
+app.use("/api/user", require("./routes/user"));
+app.use("/api/", require("./routes/index"));
+//load swagger route
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 //protect unexpected input
 app.all("*", (req, res) => {
   res.send("no route like this");
