@@ -28,6 +28,10 @@ app.use(morgan("dev"));
 app.use("/todos", ensureAuthentication, require("./routes/todos"));
 app.use("/user", require("./routes/user"));
 app.use("/", require("./routes/index"));
+//protect unexpected input
+app.all("*", (req, res) => {
+  res.send("no route like this");
+});
 
 //start listening
 app.listen(PORT, () => console.log(`Server has started on: ${PORT}`));
