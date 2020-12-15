@@ -77,16 +77,20 @@ router.post("/signin", async (req, res) => {
     [name]
   );
   user = user.rows[0];
+
   if (!user) {
-    res.status(200).send("no user with that name- please create an accout");
+    res
+      .status(403)
+      .json({ message: "no user with that name- please create an accout" });
   }
   try {
     if (await bcrypt.compare(password, user.us_password)) {
+      let tempName = user.us_name;
       const accessToken = await createToken(user.us_name);
-      user.us_password = "top secret";
-      res.send({ user, accessToken });
+      //user.us_password = "top secret";
+      res.status(200).json({ tempName, accessToken });
     } else {
-      res.send("password incorrect");
+      res.status(403).json({ message: "password incorrect" });
     }
   } catch (error) {
     console.error(error);

@@ -4,13 +4,14 @@
 
 const express = require("express");
 const morgan = require("morgan");
-const bodyParser = require("body-parser");
+const { urlencoded, json } = require("body-parser");
 const pool = require("./config/config");
 const jwt = require("jsonwebtoken");
+const cors = require("cors");
 
 //LOAD SWAGGER
 const swaggerJsDoc = require("swagger-jsdoc");
-const swaggerUi = require("swagger-ui-express");
+const { serve, setup } = require("swagger-ui-express");
 
 //SWAGGER SETUP
 const swaggerOptions = {
@@ -35,8 +36,11 @@ const PORT = process.env.PORT || 3000;
 const app = express();
 
 //allow bodyParser to recognize a body
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(urlencoded({ extended: false }));
+app.use(json());
+
+//cors
+app.use(cors());
 
 //login data
 app.use(morgan("dev"));
@@ -46,7 +50,7 @@ app.use("/api/todos", ensureAuthentication, require("./routes/todos"));
 app.use("/api/user", require("./routes/user"));
 app.use("/api/", require("./routes/index"));
 //load swagger route
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+app.use("/api-docs", serve, setup(swaggerDocs));
 //protect unexpected input
 app.all("*", (req, res) => {
   res.send("no route like this");

@@ -36,8 +36,7 @@ router.get("/users/", async (req, res) => {
   let userListArray = [];
   userList.rows.forEach((user) => userListArray.push(user.us_name));
 
-  const message = `please sign in. There is a list of valid users:
-  ${userListArray}`;
+  const message = userListArray;
   res.status(200).send(message);
 });
 
