@@ -85,10 +85,10 @@ router.post("/signin", async (req, res) => {
   }
   try {
     if (await bcrypt.compare(password, user.us_password)) {
-      let tempName = user.us_name;
+      username = user.us_name;
       const accessToken = await createToken(user.us_name);
       //user.us_password = "top secret";
-      res.status(200).json({ tempName, accessToken });
+      res.status(200).json({ username, accessToken });
     } else {
       res.status(403).json({ message: "password incorrect" });
     }
