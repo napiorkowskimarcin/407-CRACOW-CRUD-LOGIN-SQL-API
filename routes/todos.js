@@ -22,7 +22,6 @@ const pool = require("../config/config");
 *          description: "successful operation"
 */
 router.get("/", async (req, res) => {
-  console.log("this is" + req.name);
   const userName = req.name;
 
   try {
@@ -30,8 +29,8 @@ router.get("/", async (req, res) => {
       "SELECT * FROM todo_tasklist WHERE todo_user = $1",
       [userName]
     );
-    let taskNameArray = [];
-    taskList.rows.forEach((task) => taskNameArray.push(task.todo_name));
+    let taskNameArray = taskList;
+    // taskList.rows.forEach((task) => taskNameArray.push(task.todo_name));
     res.status(200).json({ taskNameArray });
   } catch (error) {
     console.log("here");
@@ -114,6 +113,7 @@ router.get("/:id", async (req, res) => {
 router.post("/create", async (req, res) => {
   const userName = req.name;
   const { taskName, taskDescription } = req.body;
+  console.log(req);
 
   if (Object.keys(req.body).length === 2) {
     try {
@@ -122,23 +122,19 @@ router.post("/create", async (req, res) => {
         [taskName]
       );
       if (checkIfAlreadyExist.rows.length) {
-        return res.send("task with that name already exist");
+        return res.json({ message: "task with that nam already exists" });
       }
       await pool.query(
         "INSERT INTO todo_tasklist (todo_user,todo_name,todo_desc ) VALUES ($1, $2, $3)",
         [userName, taskName, taskDescription]
       );
-      res.send(
-        `You have created a task as user:${userName},
-        Your task title is: ${taskName},
-        You need to do: ${taskDescription}`
-      );
+      res.json({ message: "success" });
     } catch (error) {
       console.error(error);
-      res.send("Try again");
+      res.json({ message: "try again" });
     }
   } else {
-    res.send("some keys are missing");
+    res.json({ message: "some keys are missing" });
   }
 });
 
