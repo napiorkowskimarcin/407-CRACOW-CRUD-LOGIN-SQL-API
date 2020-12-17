@@ -76,13 +76,13 @@ router.get("/:id", async (req, res) => {
     if (taskList.rows[0].todo_user !== req.name) {
       return res.send("you are not allowed to see this task");
     }
-    const message = `Hello. This is an API to do a TODO list with CRUD in SQL. You are authenticated as ${req.name}.
-    Task that you are looking for:
-    ID:  ${taskList.rows[0].todo_id}
-    CREATED BY: ${taskList.rows[0].todo_user}
-    NAME OF THE TASK: ${taskList.rows[0].todo_name}
-    SUBJECT OF THE TASK: ${taskList.rows[0].todo_desc}`;
-    res.status(200).send(message);
+    // const message = `Hello. This is an API to do a TODO list with CRUD in SQL. You are authenticated as ${req.name}.
+    // Task that you are looking for:
+    // ID:  ${taskList.rows[0].todo_id}
+    // CREATED BY: ${taskList.rows[0].todo_user}
+    // NAME OF THE TASK: ${taskList.rows[0].todo_name}
+    // SUBJECT OF THE TASK: ${taskList.rows[0].todo_desc}`;
+    res.status(200).json({ taskList });
   } catch (error) {
     console.log(error);
   }
@@ -174,8 +174,8 @@ router.post("/update", async (req, res) => {
       return res.send("there is no task with that Id!");
     }
     await pool.query(
-      "UPDATE todo_tasklist SET todo_name=($1), todo_desc=($2) WHERE todo_id=($3)",
-      [taskName, taskDescription, taskId]
+      "UPDATE todo_tasklist SET todo_name=($1), todo_desc=($2), todo_user=($3) WHERE todo_id=($4)",
+      [taskName, taskDescription, userName, taskId]
     );
     res.send(`Updated task`);
   } catch (error) {
@@ -207,9 +207,11 @@ router.post("/update", async (req, res) => {
 *        "200":
 *          description: "successful operation"
 */
-router.post("/delete/:id", async (req, res) => {
+router.delete("/delete/:id", async (req, res) => {
   const userName = req.name;
   const taskToRemove = req.params.id;
+  console.log({ userName });
+  console.log({ taskToRemove });
 
   try {
     const taskToRemoveByTaskId = await pool.query(
@@ -218,15 +220,17 @@ router.post("/delete/:id", async (req, res) => {
     );
 
     if (!taskToRemoveByTaskId.rows.length) {
-      res.send("task not found");
+      res.json({ message: "task not found" });
     }
     if (taskToRemoveByTaskId.rows[0].todo_user === userName) {
       await pool.query("DELETE FROM todo_tasklist WHERE todo_id = $1", [
         taskToRemove,
       ]);
-      res.status(200).send(`Succesfully removed task:${taskToRemove}`);
+      res
+        .status(200)
+        .json({ message: `Succesfully removed task:${taskToRemove}` });
     } else {
-      res.send("You are not allowed to remove this task!");
+      res.json({ message: "You are not allowed to remove this task!" });
     }
   } catch (error) {
     console.log(error);
