@@ -37,7 +37,7 @@ router.post("/signup", async (req, res) => {
     [name]
   );
   if (checkIfExists.rowCount) {
-    res.send("user with that name already exists");
+    res.json({ message: "user with that name already exists", created: false });
   } else {
     try {
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -46,10 +46,10 @@ router.post("/signup", async (req, res) => {
         "INSERT INTO todo_user (us_name, us_password) VALUES ($1, $2)",
         [name, hashedPassword]
       );
-      res.send(`You have created an user:${name}`);
+      res.json({ created: true });
     } catch (error) {
       console.error(error);
-      res.send("Try again");
+      res.json({ message: "try again" });
     }
   }
 });

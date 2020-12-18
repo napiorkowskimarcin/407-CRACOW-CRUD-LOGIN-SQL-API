@@ -250,7 +250,7 @@ router.delete("/delete/:id", async (req, res) => {
 */
 router.post("/truncate", async (req, res) => {
   await pool.query("TRUNCATE todo_tasklist");
-  res.send("todo list cleared");
+  res.json({ message: "todo list cleared" });
 });
 
 module.exports = router;
