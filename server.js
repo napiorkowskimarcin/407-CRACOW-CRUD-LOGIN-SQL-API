@@ -1,6 +1,9 @@
 // API
 // CREATE AND USE USER
 // CRUD TASKS IN TODO
+//heroku deploy
+require("dotenv").config();
+const isProduction = process.env.NODE_ENV === "production";
 
 const express = require("express");
 const morgan = require("morgan");

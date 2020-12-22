@@ -1,5 +1,5 @@
 -- create DB:
-CREATE DATABASE todo_db;
+--CREATE DATABASE todo_db;
 
 -- go with \c to new database
 
@@ -17,4 +17,4 @@ CREATE TABLE todo_tasklist(
 );
 
 --
-SELECT us_name, us_password FROM todo_user WHERE us_name = 'www';
+-- SELECT us_name, us_password FROM todo_user WHERE us_name = 'www';

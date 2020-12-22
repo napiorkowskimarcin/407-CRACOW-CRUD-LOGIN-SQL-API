@@ -5,7 +5,7 @@ const ensureAuthentication = (req, res, next) => {
   if (authorization) {
     try {
       const accessToken = authorization.split(" ")[1];
-      const payload = jwt.verify(accessToken, "secret to be hidden");
+      const payload = jwt.verify(accessToken, "secret");
       req.name = payload.name;
       next();
     } catch (error) {
