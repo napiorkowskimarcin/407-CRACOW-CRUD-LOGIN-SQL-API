@@ -4,10 +4,11 @@ PART1 of homework.
 Deployed to:
 https://mn-cracow-back.herokuapp.com/api-docs/
 
-Part2 is to learn and prepare a Vue frontend for this API.
+note: to verify status codes.
 
 ## FRONT END IN VUE:
 
+Part2 is to learn and prepare a Vue frontend for this API.
 https://github.com/napiorkowskimarcin/408-cracow-crud-front-end
 
 ## TASK WAS TO PREPARE A USER OPERATED CRUD API
