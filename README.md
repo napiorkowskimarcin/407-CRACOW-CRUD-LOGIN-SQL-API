@@ -1,9 +1,13 @@
 # CRACOW HOMEWORK
 
 PART1 of homework.
+Deployed to:
+https://mn-cracow-back.herokuapp.com/api-docs/
+
 Part2 is to learn and prepare a Vue frontend for this API.
 
-## FRONT END IN VUE:  
+## FRONT END IN VUE:
+
 https://github.com/napiorkowskimarcin/408-cracow-crud-front-end
 
 ## TASK WAS TO PREPARE A USER OPERATED CRUD API
