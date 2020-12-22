@@ -8,8 +8,8 @@ const maxAge = require("../config/maxAge");
 //CREATE TOKEN FOR LOG-IN
 const createToken = (user) => {
   const payload = { name: user };
-  console.log(payload.name);
-  return jwt.sign(payload, "secret to be hidden", {
+  //console.log(payload.name);
+  return jwt.sign(payload, "secret", {
     expiresIn: maxAge,
   });
 };
@@ -69,6 +69,8 @@ router.post("/signup", async (req, res) => {
 *      responses:
 *        "200":
 *          description: "successful operation"
+*        "403":
+*          description: "wrong name or password"
 */
 router.post("/signin", async (req, res) => {
   const { password, name } = req.body;
