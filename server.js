@@ -3,12 +3,20 @@
 // CRUD TASKS IN TODO
 //heroku deploy
 require("dotenv").config();
-const isProduction = process.env.NODE_ENV === "production";
+process.env.NODE_ENV != "production" ? require("dotenv").config() : null;
 
 const express = require("express");
 const morgan = require("morgan");
 const { urlencoded, json } = require("body-parser");
-const pool = require("./config/config");
+// - heroku deploy
+const { Pool } = require("pg");
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
+  },
+});
+// -heroku deploy
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
 
